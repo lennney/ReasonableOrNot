@@ -12,8 +12,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         csv_path = os.path.join(settings.BASE_DIR, 'phones_data.csv')
 
-        # Pre-fetch existing models in one query
-        existing_models = set(Phone.objects.values_list('model', flat=True))
+        # Pre-fetch existing phones with their PKs for bulk_update
+        existing_phones = {p.model: p for p in Phone.objects.all()}
+        existing_models = set(existing_phones.keys())
 
         phones_to_create = []
         phones_to_update = []
@@ -83,7 +84,7 @@ class Command(BaseCommand):
                     screen_size = 0.0
 
                 if model in existing_models:
-                    phone = Phone(model=model)
+                    phone = existing_phones[model]
                     phone.brand = brand
                     phone.price = price
                     phone.cpu = cpu
