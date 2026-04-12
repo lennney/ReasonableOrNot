@@ -9,7 +9,7 @@ class Command(BaseCommand):
     help = 'Import phone data from CSV file'
 
     def handle(self, *args, **options):
-        csv_path = os.path.join(settings.BASE_DIR, '手机数据总表_合并版.csv')
+        csv_path = os.path.join(settings.BASE_DIR, 'phones_data.csv')
 
         with open(csv_path, 'r', encoding='utf-8-sig') as f:
             reader = csv.reader(f)

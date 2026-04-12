@@ -10,7 +10,6 @@ venv/
 env/
 
 db.sqlite3
-*.csv
 
 .idea/
 .vscode/
