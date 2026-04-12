@@ -141,6 +141,6 @@ GZIP_CONTENT_TYPES = (
 )
 
 # Whitenoise 静态文件配置
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
