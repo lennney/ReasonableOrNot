@@ -1,3 +1,5 @@
+# Reasonable Or Not project
+
 __pycache__/
 *.pyc
 *.pyo
@@ -8,8 +10,10 @@ venv/
 env/
 
 db.sqlite3
+*.csv
 
 .idea/
 .vscode/
+.claude/
 
 staticfiles/
