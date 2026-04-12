@@ -1,0 +1,84 @@
+{% extends "user/base.html" %}
+
+{% block title %}Reasonable Or Not | Home{% endblock %}
+
+{% block content %}
+<main>
+    <section class="hero">
+        <div class="hero-copy">
+            <p class="eyebrow">Original idea, upgraded presentation</p>
+            <h1>Turn a classroom recommender into a portfolio-ready product demo.</h1>
+            <p class="hero-text">
+                Reasonable Or Not keeps the original phone recommendation concept, then upgrades the experience with cleaner interaction flow, weighted scoring logic, and a polished interface that is ready to present on GitHub.
+            </p>
+            <div class="hero-actions">
+                <a class="button primary" href="{% url 'requirement' %}">Start Recommendation</a>
+                <a class="button secondary" href="{% url 'result' %}">View Methodology</a>
+            </div>
+            <div class="hero-meta">
+                <span>Django project</span>
+                <span>Weighted decision model</span>
+                <span>Portfolio-ready UI refresh</span>
+            </div>
+        </div>
+        <div class="hero-panel">
+            <div class="hero-grid">
+                <div>
+                    <strong>Project Value</strong>
+                    <p>Demonstrates product thinking, front-end redesign, and back-end cleanup in one small project.</p>
+                </div>
+                <div>
+                    <strong>What changed</strong>
+                    <p>Unified navigation, improved forms, dynamic recommendation results, and better documentation.</p>
+                </div>
+            </div>
+            <div class="signal-card">
+                <span class="signal-title">Current focus</span>
+                <strong>Help users compare iPhone options by budget and preference fit.</strong>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-heading">
+            <p class="eyebrow">Featured devices</p>
+            <h2>Three devices that represent the current recommendation pool.</h2>
+        </div>
+        <div class="phone-strip">
+            {% for phone in featured_phones %}
+            <article class="phone-preview">
+                <span class="phone-chip">{{ phone.series }}</span>
+                <h3>{{ phone.name }}</h3>
+                <p>{{ phone.summary }}</p>
+                <dl>
+                    <div><dt>Price</dt><dd>¥{{ phone.price }}</dd></div>
+                    <div><dt>Storage</dt><dd>{{ phone.storage_gb }}GB</dd></div>
+                    <div><dt>Camera</dt><dd>Level {{ phone.camera }}</dd></div>
+                </dl>
+            </article>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="section split-section">
+        <div>
+            <p class="eyebrow">Why this project matters</p>
+            <h2>It shows how an old idea can be reworked into a stronger engineering story.</h2>
+        </div>
+        <div class="feature-list">
+            <article>
+                <h3>Preserve the original core</h3>
+                <p>The recommendation concept stays intact: match user expectations to available phone models.</p>
+            </article>
+            <article>
+                <h3>Upgrade the product experience</h3>
+                <p>The interaction now feels like a designed workflow instead of disconnected practice pages.</p>
+            </article>
+            <article>
+                <h3>Make the repo presentable</h3>
+                <p>Documentation, cleaner structure, and Git preparation turn the project into a portfolio artifact.</p>
+            </article>
+        </div>
+    </section>
+</main>
+{% endblock %}

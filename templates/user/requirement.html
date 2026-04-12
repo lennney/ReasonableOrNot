@@ -1,0 +1,120 @@
+{% extends "user/base.html" %}
+
+{% block title %}Reasonable Or Not | Requirements{% endblock %}
+
+{% block content %}
+<main class="form-page">
+    <section class="section-heading compact">
+        <p class="eyebrow">Preference capture</p>
+        <h1>Describe the phone profile you want.</h1>
+        <p>This page turns user expectations into a weighted recommendation request, which makes the project easier to explain in interviews and on GitHub.</p>
+    </section>
+
+    <section class="form-layout">
+        <form class="preference-form" method="post" action="{% url 'recommend' %}">
+            {% csrf_token %}
+            <div class="field-group">
+                <label>
+                    <span>Preferred series</span>
+                    <select name="preferred_series">
+                        <option value="any">Any</option>
+                        <option value="iphone 14 pro">iPhone 14 Pro</option>
+                        <option value="iphone 15 pro">iPhone 15 Pro</option>
+                    </select>
+                </label>
+                <label>
+                    <span>Budget target</span>
+                    <select name="budget">
+                        <option value="4000">Level 1 · around ¥4,000</option>
+                        <option value="8000" selected>Level 2 · around ¥8,000</option>
+                        <option value="12000">Level 3 · around ¥12,000</option>
+                        <option value="14000">Level 4 · around ¥14,000</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="field-grid">
+                <label>
+                    <span>Performance</span>
+                    <select name="performance">
+                        <option value="1">Level 1</option>
+                        <option value="2">Level 2</option>
+                        <option value="3">Level 3</option>
+                        <option value="4" selected>Level 4</option>
+                    </select>
+                </label>
+                <label>
+                    <span>Charging</span>
+                    <select name="charging">
+                        <option value="4" selected>Level 1</option>
+                        <option value="6">Level 2</option>
+                        <option value="8">Level 3</option>
+                        <option value="10">Level 4</option>
+                    </select>
+                </label>
+                <label>
+                    <span>Screen size</span>
+                    <select name="screen_size">
+                        <option value="6.0">Level 1</option>
+                        <option value="6.1" selected>Level 2</option>
+                        <option value="6.5">Level 3</option>
+                        <option value="7.0">Level 4</option>
+                    </select>
+                </label>
+                <label>
+                    <span>Storage</span>
+                    <select name="storage">
+                        <option value="5">128GB</option>
+                        <option value="6" selected>256GB</option>
+                        <option value="7">512GB</option>
+                        <option value="8">1TB</option>
+                    </select>
+                </label>
+                <label>
+                    <span>Battery</span>
+                    <select name="battery">
+                        <option value="1">Level 1</option>
+                        <option value="2">Level 2</option>
+                        <option value="3">Level 3</option>
+                        <option value="4" selected>Level 4</option>
+                    </select>
+                </label>
+                <label>
+                    <span>Camera</span>
+                    <select name="camera">
+                        <option value="1">Level 1</option>
+                        <option value="2">Level 2</option>
+                        <option value="3">Level 3</option>
+                        <option value="4" selected>Level 4</option>
+                    </select>
+                </label>
+            </div>
+
+            <button class="button primary" type="submit">Generate Recommendation</button>
+        </form>
+
+        <aside class="info-panel">
+            <div>
+                <p class="eyebrow">Interpretation guide</p>
+                <h2>How the level system maps to device expectations.</h2>
+            </div>
+            <div class="table-lite">
+                <div class="table-row head">
+                    <span>Level</span>
+                    <span>Price</span>
+                    <span>Storage</span>
+                    <span>Camera</span>
+                </div>
+                {% for item in preset_ranges %}
+                <div class="table-row">
+                    <span>{{ item.label }}</span>
+                    <span>{{ item.price }}</span>
+                    <span>{{ item.storage }}</span>
+                    <span>{{ item.camera }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </aside>
+    </section>
+</main>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends "user/base.html" %}
+
+{% block title %}Reasonable Or Not | Recommendation{% endblock %}
+
+{% block content %}
+<main class="results-page">
+    <section class="section-heading compact">
+        <p class="eyebrow">Recommendation result</p>
+        <h1>{{ best_match.name }} is the strongest match.</h1>
+        <p>Your preferences were translated into a weighted score, then compared across the current iPhone dataset.</p>
+    </section>
+
+    <section class="results-layout">
+        <article class="winner-card">
+            <span class="phone-chip">{{ best_match.series }}</span>
+            <h2>{{ best_match.name }}</h2>
+            <p>{{ best_match.summary }}</p>
+            <div class="score-ring">
+                <strong>{{ best_match.match_score }}</strong>
+                <span>match score</span>
+            </div>
+            <dl class="metrics">
+                <div><dt>Price</dt><dd>¥{{ best_match.price }}</dd></div>
+                <div><dt>Storage</dt><dd>{{ best_match.storage_gb }}GB</dd></div>
+                <div><dt>Battery</dt><dd>Level {{ best_match.battery }}</dd></div>
+                <div><dt>Camera</dt><dd>Level {{ best_match.camera }}</dd></div>
+            </dl>
+        </article>
+
+        <aside class="explain-card">
+            <h2>Why it ranked first</h2>
+            <div class="mini-list">
+                {% for item in best_match.breakdown|slice:":4" %}
+                <div class="mini-row">
+                    <span>{{ item.label }}</span>
+                    <strong>{{ item.score }}</strong>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="mini-note">
+                <strong>Selected profile</strong>
+                <p>Budget ¥{{ preferences.budget }}, storage level {{ preferences.storage }}, camera level {{ preferences.camera }}, battery level {{ preferences.battery }}.</p>
+            </div>
+        </aside>
+    </section>
+
+    <section class="section">
+        <div class="section-heading compact">
+            <p class="eyebrow">Alternatives</p>
+            <h2>Nearby options worth comparing.</h2>
+        </div>
+        <div class="alternatives">
+            {% for phone in alternatives %}
+            <article class="alt-card">
+                <div class="alt-topline">
+                    <span class="phone-chip">{{ phone.series }}</span>
+                    <strong>{{ phone.match_score }}</strong>
+                </div>
+                <h3>{{ phone.name }}</h3>
+                <p>{{ phone.summary }}</p>
+                <div class="alt-meta">
+                    <span>¥{{ phone.price }}</span>
+                    <span>{{ phone.storage_gb }}GB</span>
+                    <span>Camera {{ phone.camera }}</span>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </section>
+</main>
+{% endblock %}

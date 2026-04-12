@@ -1,0 +1,31 @@
+{% extends "user/base.html" %}
+
+{% block title %}Reasonable Or Not | Login{% endblock %}
+
+{% block content %}
+<main class="auth-page">
+    <section class="auth-panel">
+        <div class="auth-copy">
+            <p class="eyebrow">Sign in</p>
+            <h1>Continue your recommendation session.</h1>
+            <p>Use a registered account to save the experience as a complete user flow and jump directly into the phone preference form.</p>
+        </div>
+        <form class="auth-form" action="{% url 'login' %}" method="post">
+            {% csrf_token %}
+            {% if error %}
+            <div class="message error">{{ error }}</div>
+            {% endif %}
+            <label>
+                <span>Username</span>
+                <input type="text" name="username" placeholder="Enter your username">
+            </label>
+            <label>
+                <span>Password</span>
+                <input type="password" name="password" placeholder="Enter your password">
+            </label>
+            <button class="button primary" type="submit">Login</button>
+            <p class="auth-footnote">No account yet? <a href="{% url 'register' %}">Create one here</a>.</p>
+        </form>
+    </section>
+</main>
+{% endblock %}

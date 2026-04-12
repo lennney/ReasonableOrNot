@@ -1,0 +1,46 @@
+{% extends "user/base.html" %}
+
+{% block title %}Reasonable Or Not | Methodology{% endblock %}
+
+{% block content %}
+<main class="method-page">
+    <section class="section-heading compact">
+        <p class="eyebrow">Methodology</p>
+        <h1>How the project makes recommendation decisions.</h1>
+        <p>This page helps explain the project in a portfolio context: not just what the UI does, but how the decision process is modeled.</p>
+    </section>
+
+    <section class="method-layout">
+        <article class="method-card">
+            <h2>Decision flow</h2>
+            <div class="mini-list">
+                {% for step in methodology %}
+                <div class="mini-row wide">
+                    <span>{{ forloop.counter }}</span>
+                    <strong>{{ step }}</strong>
+                </div>
+                {% endfor %}
+            </div>
+        </article>
+
+        <article class="method-card">
+            <h2>Value-oriented ranking</h2>
+            <p>The table below shows how the same device dataset can also be presented from a value perspective, which is useful when explaining product thinking beyond pure similarity scoring.</p>
+            <div class="table-lite stacked">
+                <div class="table-row head">
+                    <span>Model</span>
+                    <span>Price</span>
+                    <span>Value score</span>
+                </div>
+                {% for phone in phones %}
+                <div class="table-row">
+                    <span>{{ phone.name }}</span>
+                    <span>¥{{ phone.price }}</span>
+                    <span>{{ phone.value_score }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </article>
+    </section>
+</main>
+{% endblock %}

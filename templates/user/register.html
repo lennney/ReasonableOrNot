@@ -1,0 +1,38 @@
+{% extends "user/base.html" %}
+
+{% block title %}Reasonable Or Not | Register{% endblock %}
+
+{% block content %}
+<main class="auth-page">
+    <section class="auth-panel">
+        <div class="auth-copy">
+            <p class="eyebrow">Create account</p>
+            <h1>Build a smoother end-to-end product demo.</h1>
+            <p>Registration is lightweight here, but it helps present the project as a more complete application instead of a one-off algorithm page.</p>
+        </div>
+        <form class="auth-form" action="{% url 'register' %}" method="post">
+            {% csrf_token %}
+            {% if error %}
+            <div class="message error">{{ error }}</div>
+            {% endif %}
+            {% if success %}
+            <div class="message success">{{ success }}</div>
+            {% endif %}
+            <label>
+                <span>Username</span>
+                <input type="text" name="username" placeholder="Choose a username">
+            </label>
+            <label>
+                <span>Password</span>
+                <input type="password" name="password" placeholder="Create a password">
+            </label>
+            <label>
+                <span>Email</span>
+                <input type="email" name="email" placeholder="Enter your email">
+            </label>
+            <button class="button primary" type="submit">Register</button>
+            <p class="auth-footnote">Already registered? <a href="{% url 'login' %}">Go to login</a>.</p>
+        </form>
+    </section>
+</main>
+{% endblock %}
