@@ -2,6 +2,7 @@ import csv
 import os
 from django.conf import settings
 from django.core.management.base import BaseCommand
+from django.db import transaction
 from user.models import Phone
 
 
@@ -11,12 +12,15 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         csv_path = os.path.join(settings.BASE_DIR, 'phones_data.csv')
 
-        phones_to_upsert = []
+        # Pre-fetch existing models in one query
         existing_models = set(Phone.objects.values_list('model', flat=True))
+
+        phones_to_create = []
+        phones_to_update = []
 
         with open(csv_path, 'r', encoding='utf-8-sig') as f:
             reader = csv.reader(f)
-            header = next(reader)
+            next(reader)  # skip header
             for row in reader:
                 if len(row) < 14:
                     continue
@@ -79,23 +83,23 @@ class Command(BaseCommand):
                     screen_size = 0.0
 
                 if model in existing_models:
-                    Phone.objects.filter(model=model).update(
-                        brand=brand,
-                        price=price,
-                        cpu=cpu,
-                        ram=ram,
-                        rom=rom,
-                        charging=charging,
-                        battery=battery,
-                        screen_refresh_rate=screen_refresh,
-                        screen_resolution=screen_res,
-                        weight=weight,
-                        front_camera=front_cam,
-                        rear_camera=rear_cam,
-                        screen_size=screen_size,
-                    )
+                    phone = Phone(model=model)
+                    phone.brand = brand
+                    phone.price = price
+                    phone.cpu = cpu
+                    phone.ram = ram
+                    phone.rom = rom
+                    phone.charging = charging
+                    phone.battery = battery
+                    phone.screen_refresh_rate = screen_refresh
+                    phone.screen_resolution = screen_res
+                    phone.weight = weight
+                    phone.front_camera = front_cam
+                    phone.rear_camera = rear_cam
+                    phone.screen_size = screen_size
+                    phones_to_update.append(phone)
                 else:
-                    phones_to_upsert.append(Phone(
+                    phones_to_create.append(Phone(
                         brand=brand,
                         model=model,
                         price=price,
@@ -112,8 +116,17 @@ class Command(BaseCommand):
                         screen_size=screen_size,
                     ))
 
-        if phones_to_upsert:
-            Phone.objects.bulk_create(phones_to_upsert, ignore_conflicts=True)
+        # Batch operations in a single transaction
+        with transaction.atomic():
+            if phones_to_update:
+                Phone.objects.bulk_update(
+                    phones_to_update,
+                    ['brand', 'price', 'cpu', 'ram', 'rom', 'charging', 'battery',
+                     'screen_refresh_rate', 'screen_resolution', 'weight',
+                     'front_camera', 'rear_camera', 'screen_size']
+                )
+            if phones_to_create:
+                Phone.objects.bulk_create(phones_to_create, ignore_conflicts=True)
 
         count = Phone.objects.count()
         self.stdout.write(self.style.SUCCESS(f'Successfully imported {count} phones'))
