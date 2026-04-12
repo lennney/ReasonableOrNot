@@ -1,2 +1,2 @@
 release: python manage.py migrate && python manage.py collectstatic --noinput
-web: gunicorn login.wsgi --access-logfile - --error-logfile -
+web: gunicorn login.wsgi --bind 0.0.0.0:8080
