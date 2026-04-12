@@ -6,31 +6,41 @@
 <main class="results-page">
     <section class="section-heading compact">
         <p class="eyebrow">Recommendation result</p>
-        <h1>{{ best_match.name }} is the strongest match.</h1>
-        <p>Your preferences were translated into a weighted score, then compared across the current iPhone dataset.</p>
+        <h1>{{ best_match.brand }} {{ best_match.model }} is the strongest match.</h1>
+        <p>Your preferences were analyzed using cosine similarity against all phones in our database.</p>
     </section>
+
+    {% if error %}
+    <div class="error-message">{{ error }}</div>
+    {% endif %}
 
     <section class="results-layout">
         <article class="winner-card">
-            <span class="phone-chip">{{ best_match.series }}</span>
-            <h2>{{ best_match.name }}</h2>
-            <p>{{ best_match.summary }}</p>
+            <span class="phone-chip">{{ best_match.brand }}</span>
+            <h2>{{ best_match.model }}</h2>
             <div class="score-ring">
                 <strong>{{ best_match.match_score }}</strong>
-                <span>match score</span>
+                <span>similarity score</span>
             </div>
             <dl class="metrics">
                 <div><dt>Price</dt><dd>¥{{ best_match.price }}</dd></div>
-                <div><dt>Storage</dt><dd>{{ best_match.storage_gb }}GB</dd></div>
-                <div><dt>Battery</dt><dd>Level {{ best_match.battery }}</dd></div>
-                <div><dt>Camera</dt><dd>Level {{ best_match.camera }}</dd></div>
+                <div><dt>RAM</dt><dd>{{ best_match.ram }}GB</dd></div>
+                <div><dt>Storage</dt><dd>{{ best_match.rom }}GB</dd></div>
+                <div><dt>Charging</dt><dd>{{ best_match.charging }}W</dd></div>
+                <div><dt>Battery</dt><dd>{{ best_match.battery }}mAh</dd></div>
+                <div><dt>Screen</dt><dd>{{ best_match.screen_size }}"</dd></div>
+                <div><dt>Front Camera</dt><dd>{{ best_match.front_camera }}MP</dd></div>
+                <div><dt>Rear Camera</dt><dd>{{ best_match.rear_camera }}MP</dd></div>
             </dl>
+            <div class="cpu-info">
+                <strong>CPU:</strong> {{ best_match.cpu }}
+            </div>
         </article>
 
         <aside class="explain-card">
             <h2>Why it ranked first</h2>
             <div class="mini-list">
-                {% for item in best_match.breakdown|slice:":4" %}
+                {% for item in best_match.breakdown|slice:":5" %}
                 <div class="mini-row">
                     <span>{{ item.label }}</span>
                     <strong>{{ item.score }}</strong>
@@ -39,7 +49,7 @@
             </div>
             <div class="mini-note">
                 <strong>Selected profile</strong>
-                <p>Budget ¥{{ preferences.budget }}, storage level {{ preferences.storage }}, camera level {{ preferences.camera }}, battery level {{ preferences.battery }}.</p>
+                <p>Budget ¥{{ preferences.budget }}, storage {{ preferences.storage }}GB, camera level {{ preferences.camera }}, battery level {{ preferences.battery }}.</p>
             </div>
         </aside>
     </section>
@@ -53,15 +63,15 @@
             {% for phone in alternatives %}
             <article class="alt-card">
                 <div class="alt-topline">
-                    <span class="phone-chip">{{ phone.series }}</span>
+                    <span class="phone-chip">{{ phone.brand }}</span>
                     <strong>{{ phone.match_score }}</strong>
                 </div>
-                <h3>{{ phone.name }}</h3>
-                <p>{{ phone.summary }}</p>
+                <h3>{{ phone.model }}</h3>
                 <div class="alt-meta">
                     <span>¥{{ phone.price }}</span>
-                    <span>{{ phone.storage_gb }}GB</span>
-                    <span>Camera {{ phone.camera }}</span>
+                    <span>{{ phone.ram }}GB RAM</span>
+                    <span>{{ phone.rom }}GB ROM</span>
+                    <span>{{ phone.rear_camera }}MP</span>
                 </div>
             </article>
             {% endfor %}

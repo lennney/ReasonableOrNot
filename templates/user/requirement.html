@@ -15,20 +15,22 @@
             {% csrf_token %}
             <div class="field-group">
                 <label>
-                    <span>Preferred series</span>
-                    <select name="preferred_series">
+                    <span>Preferred brand</span>
+                    <select name="preferred_brand">
                         <option value="any">Any</option>
-                        <option value="iphone 14 pro">iPhone 14 Pro</option>
-                        <option value="iphone 15 pro">iPhone 15 Pro</option>
+                        {% for brand in brands %}
+                        <option value="{{ brand }}">{{ brand }}</option>
+                        {% endfor %}
                     </select>
                 </label>
                 <label>
                     <span>Budget target</span>
                     <select name="budget">
-                        <option value="4000">Level 1 · around ¥4,000</option>
-                        <option value="8000" selected>Level 2 · around ¥8,000</option>
-                        <option value="12000">Level 3 · around ¥12,000</option>
-                        <option value="14000">Level 4 · around ¥14,000</option>
+                        <option value="2000">Level 1 · around ¥2,000</option>
+                        <option value="4000">Level 2 · around ¥4,000</option>
+                        <option value="8000" selected>Level 3 · around ¥8,000</option>
+                        <option value="12000">Level 4 · around ¥12,000</option>
+                        <option value="16000">Level 5 · around ¥16,000</option>
                     </select>
                 </label>
             </div>
@@ -39,53 +41,53 @@
                     <select name="performance">
                         <option value="1">Level 1</option>
                         <option value="2">Level 2</option>
-                        <option value="3">Level 3</option>
-                        <option value="4" selected>Level 4</option>
+                        <option value="3" selected>Level 3</option>
+                        <option value="4">Level 4</option>
                     </select>
                 </label>
                 <label>
                     <span>Charging</span>
                     <select name="charging">
-                        <option value="4" selected>Level 1</option>
-                        <option value="6">Level 2</option>
-                        <option value="8">Level 3</option>
-                        <option value="10">Level 4</option>
+                        <option value="1">Level 1 (0-30W)</option>
+                        <option value="2">Level 2 (31-60W)</option>
+                        <option value="3">Level 3 (61-100W)</option>
+                        <option value="4">Level 4 (100W+)</option>
                     </select>
                 </label>
                 <label>
                     <span>Screen size</span>
                     <select name="screen_size">
-                        <option value="6.0">Level 1</option>
-                        <option value="6.1" selected>Level 2</option>
-                        <option value="6.5">Level 3</option>
-                        <option value="7.0">Level 4</option>
+                        <option value="6.0">Compact (6.0")</option>
+                        <option value="6.5" selected>Medium (6.5")</option>
+                        <option value="6.8">Large (6.8")</option>
+                        <option value="7.5">Tablet (7.5"+)</option>
                     </select>
                 </label>
                 <label>
                     <span>Storage</span>
                     <select name="storage">
-                        <option value="5">128GB</option>
-                        <option value="6" selected>256GB</option>
-                        <option value="7">512GB</option>
-                        <option value="8">1TB</option>
+                        <option value="128">128GB</option>
+                        <option value="256" selected>256GB</option>
+                        <option value="512">512GB</option>
+                        <option value="1024">1TB</option>
                     </select>
                 </label>
                 <label>
                     <span>Battery</span>
                     <select name="battery">
-                        <option value="1">Level 1</option>
-                        <option value="2">Level 2</option>
-                        <option value="3">Level 3</option>
-                        <option value="4" selected>Level 4</option>
+                        <option value="1">Level 1 (3000-4000mAh)</option>
+                        <option value="2">Level 2 (4000-5000mAh)</option>
+                        <option value="3" selected>Level 3 (5000-5500mAh)</option>
+                        <option value="4">Level 4 (5500mAh+)</option>
                     </select>
                 </label>
                 <label>
                     <span>Camera</span>
                     <select name="camera">
-                        <option value="1">Level 1</option>
-                        <option value="2">Level 2</option>
-                        <option value="3">Level 3</option>
-                        <option value="4" selected>Level 4</option>
+                        <option value="1">Level 1 (Basic)</option>
+                        <option value="2">Level 2 (Good)</option>
+                        <option value="3" selected>Level 3 (Advanced)</option>
+                        <option value="4">Level 4 (Flagship)</option>
                     </select>
                 </label>
             </div>

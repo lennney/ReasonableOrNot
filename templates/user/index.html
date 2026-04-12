@@ -9,7 +9,7 @@
             <p class="eyebrow">Original idea, upgraded presentation</p>
             <h1>Turn a classroom recommender into a portfolio-ready product demo.</h1>
             <p class="hero-text">
-                Reasonable Or Not keeps the original phone recommendation concept, then upgrades the experience with cleaner interaction flow, weighted scoring logic, and a polished interface that is ready to present on GitHub.
+                Reasonable Or Not keeps the original phone recommendation concept, then upgrades the experience with cleaner interaction flow, cosine similarity matching, and a polished interface that is ready to present on GitHub.
             </p>
             <div class="hero-actions">
                 <a class="button primary" href="{% url 'requirement' %}">Start Recommendation</a>
@@ -17,7 +17,7 @@
             </div>
             <div class="hero-meta">
                 <span>Django project</span>
-                <span>Weighted decision model</span>
+                <span>Cosine similarity matching</span>
                 <span>Portfolio-ready UI refresh</span>
             </div>
         </div>
@@ -34,7 +34,7 @@
             </div>
             <div class="signal-card">
                 <span class="signal-title">Current focus</span>
-                <strong>Help users compare iPhone options by budget and preference fit.</strong>
+                <strong>Help users compare phone options by budget and preference fit using cosine similarity.</strong>
             </div>
         </div>
     </section>
@@ -47,13 +47,13 @@
         <div class="phone-strip">
             {% for phone in featured_phones %}
             <article class="phone-preview">
-                <span class="phone-chip">{{ phone.series }}</span>
-                <h3>{{ phone.name }}</h3>
-                <p>{{ phone.summary }}</p>
+                <span class="phone-chip">{{ phone.brand }}</span>
+                <h3>{{ phone.model }}</h3>
                 <dl>
                     <div><dt>Price</dt><dd>¥{{ phone.price }}</dd></div>
-                    <div><dt>Storage</dt><dd>{{ phone.storage_gb }}GB</dd></div>
-                    <div><dt>Camera</dt><dd>Level {{ phone.camera }}</dd></div>
+                    <div><dt>RAM</dt><dd>{{ phone.ram }}GB</dd></div>
+                    <div><dt>Storage</dt><dd>{{ phone.rom }}GB</dd></div>
+                    <div><dt>Camera</dt><dd>{{ phone.rear_camera }}MP</dd></div>
                 </dl>
             </article>
             {% endfor %}

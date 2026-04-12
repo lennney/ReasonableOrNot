@@ -1,154 +1,21 @@
 import hashlib
+import math
 
 from django.conf import settings
-from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
-from .models import User
-
-
-PHONES = [
-    {
-        "id": "p1",
-        "name": "iPhone 14 Pro 128GB",
-        "series": "iPhone 14 Pro",
-        "price": 7099,
-        "performance": 4,
-        "storage_score": 5,
-        "storage_gb": 128,
-        "charging": 4,
-        "battery": 3,
-        "screen": 4,
-        "camera": 3,
-        "screen_size": 6.1,
-        "summary": "Balanced entry point for the 14 Pro line with solid everyday performance.",
-    },
-    {
-        "id": "p2",
-        "name": "iPhone 14 Pro 256GB",
-        "series": "iPhone 14 Pro",
-        "price": 7899,
-        "performance": 4,
-        "storage_score": 6,
-        "storage_gb": 256,
-        "charging": 4,
-        "battery": 3,
-        "screen": 4,
-        "camera": 3,
-        "screen_size": 6.1,
-        "summary": "A practical upgrade for users who want more local storage without changing the form factor.",
-    },
-    {
-        "id": "p3",
-        "name": "iPhone 14 Pro 512GB",
-        "series": "iPhone 14 Pro",
-        "price": 9299,
-        "performance": 4,
-        "storage_score": 7,
-        "storage_gb": 512,
-        "charging": 4,
-        "battery": 3,
-        "screen": 4,
-        "camera": 3,
-        "screen_size": 6.1,
-        "summary": "For users who shoot often and keep a larger media library on-device.",
-    },
-    {
-        "id": "p4",
-        "name": "iPhone 14 Pro 1TB",
-        "series": "iPhone 14 Pro",
-        "price": 10199,
-        "performance": 4,
-        "storage_score": 8,
-        "storage_gb": 1024,
-        "charging": 4,
-        "battery": 3,
-        "screen": 4,
-        "camera": 3,
-        "screen_size": 6.1,
-        "summary": "Built for creators who care more about capacity than price efficiency.",
-    },
-    {
-        "id": "p5",
-        "name": "iPhone 15 Pro 1TB",
-        "series": "iPhone 15 Pro",
-        "price": 12999,
-        "performance": 4,
-        "storage_score": 8,
-        "storage_gb": 1024,
-        "charging": 4,
-        "battery": 4,
-        "screen": 4,
-        "camera": 4,
-        "screen_size": 6.1,
-        "summary": "Top-tier option for premium buyers focused on battery and camera improvements.",
-    },
-    {
-        "id": "p6",
-        "name": "iPhone 15 Pro 128GB",
-        "series": "iPhone 15 Pro",
-        "price": 7999,
-        "performance": 4,
-        "storage_score": 5,
-        "storage_gb": 128,
-        "charging": 4,
-        "battery": 4,
-        "screen": 4,
-        "camera": 4,
-        "screen_size": 6.1,
-        "summary": "Good fit for users who want the newer generation but do not need large storage.",
-    },
-    {
-        "id": "p7",
-        "name": "iPhone 15 Pro 256GB",
-        "series": "iPhone 15 Pro",
-        "price": 8999,
-        "performance": 4,
-        "storage_score": 6,
-        "storage_gb": 256,
-        "charging": 4,
-        "battery": 4,
-        "screen": 4,
-        "camera": 4,
-        "screen_size": 6.1,
-        "summary": "The most versatile choice when budget, capacity, and camera quality all matter.",
-    },
-    {
-        "id": "p8",
-        "name": "iPhone 15 Pro 512GB",
-        "series": "iPhone 15 Pro",
-        "price": 10999,
-        "performance": 4,
-        "storage_score": 7,
-        "storage_gb": 512,
-        "charging": 4,
-        "battery": 4,
-        "screen": 4,
-        "camera": 4,
-        "screen_size": 6.1,
-        "summary": "A premium middle ground with strong capacity for creators and heavy users.",
-    },
-]
-
-SCORING_FIELDS = [
-    ("budget", "price", 0.28),
-    ("performance", "performance", 0.12),
-    ("charging", "charging", 0.10),
-    ("screen_size", "screen_size", 0.10),
-    ("storage", "storage_score", 0.18),
-    ("battery", "battery", 0.12),
-    ("camera", "camera", 0.10),
-]
+from .models import Phone, User
 
 
 def index(request):
     username = request.session.get("username")
+    featured_phones = Phone.objects.all()[:3]
     return render(
         request,
         "user/index.html",
         {
             "username": username,
-            "featured_phones": PHONES[4:7],
+            "featured_phones": featured_phones,
         },
     )
 
@@ -192,11 +59,13 @@ def logout(request):
 
 
 def requirement(request):
+    brands = list(Phone.objects.values_list('brand', flat=True).distinct())
     return render(
         request,
         "user/requirement.html",
         {
             "username": request.session.get("username"),
+            "brands": brands,
             "preset_ranges": [
                 {"label": "Level 1", "price": "0-4,000", "charging": "0-30W", "screen": "6.0", "storage": "128GB", "camera": "Basic"},
                 {"label": "Level 2", "price": "4,000-8,000", "charging": "31-60W", "screen": "6.5", "storage": "256GB", "camera": "Balanced"},
@@ -212,11 +81,51 @@ def recommend(request):
         return redirect("requirement")
 
     preferences = _read_preferences(request)
-    ranked_phones = [_build_recommendation(phone, preferences) for phone in PHONES]
-    ranked_phones.sort(key=lambda item: item["match_score"], reverse=True)
+    phones = Phone.objects.all()
 
-    best_match = ranked_phones[0]
-    alternatives = ranked_phones[1:4]
+    if not phones.exists():
+        return render(
+            request,
+            "user/recommend.html",
+            {
+                "username": request.session.get("username"),
+                "preferences": preferences,
+                "best_match": None,
+                "alternatives": [],
+                "error": "No phone data available. Please import the database first.",
+            },
+        )
+
+    # Normalize features and compute cosine similarity
+    pref_vector = _build_preference_vector(preferences)
+    recommendations = []
+
+    for phone in phones:
+        phone_vector = _build_phone_vector(phone)
+        similarity = _cosine_similarity(pref_vector, phone_vector)
+        breakdown = _compute_breakdown(phone, preferences, pref_vector, phone_vector)
+
+        recommendations.append({
+            "id": phone.id,
+            "brand": phone.brand,
+            "model": phone.model,
+            "price": phone.price,
+            "cpu": phone.cpu,
+            "ram": phone.ram,
+            "rom": phone.rom,
+            "charging": phone.charging,
+            "battery": phone.battery,
+            "screen_size": phone.screen_size,
+            "front_camera": phone.front_camera,
+            "rear_camera": phone.rear_camera,
+            "match_score": round(similarity * 100, 1),
+            "breakdown": breakdown,
+        })
+
+    recommendations.sort(key=lambda x: x["match_score"], reverse=True)
+
+    best_match = recommendations[0]
+    alternatives = recommendations[1:4]
 
     return render(
         request,
@@ -231,28 +140,25 @@ def recommend(request):
 
 
 def result(request):
-    ranked_by_value = sorted(
-        [
-            {
-                **phone,
-                "value_score": round(
-                    (
-                        phone["performance"]
-                        + phone["battery"]
-                        + phone["camera"]
-                        + phone["screen"]
-                        + phone["storage_score"] / 2
-                    )
-                    / phone["price"]
-                    * 10000,
-                    2,
-                ),
-            }
-            for phone in PHONES
-        ],
-        key=lambda item: item["value_score"],
-        reverse=True,
-    )
+    phones = Phone.objects.all()
+    phone_list = []
+
+    for phone in phones:
+        # Value score: performance metrics per price unit
+        perf_score = (phone.ram + phone.rom // 4 + phone.battery // 200 +
+                      phone.front_camera + phone.rear_camera // 2) / max(phone.price, 1) * 1000
+        phone_list.append({
+            "brand": phone.brand,
+            "model": phone.model,
+            "price": phone.price,
+            "ram": phone.ram,
+            "rom": phone.rom,
+            "battery": phone.battery,
+            "rear_camera": phone.rear_camera,
+            "value_score": round(perf_score, 2),
+        })
+
+    ranked_by_value = sorted(phone_list, key=lambda x: x["value_score"], reverse=True)
 
     return render(
         request,
@@ -261,9 +167,9 @@ def result(request):
             "username": request.session.get("username"),
             "phones": ranked_by_value,
             "methodology": [
-                "The project converts user preferences into a weighted profile.",
-                "Each phone is scored by closeness to the expected price, storage, battery, and camera level.",
-                "The final output highlights both the strongest match and nearby alternatives for comparison.",
+                "The project converts user preferences into a feature vector.",
+                "Cosine similarity measures the angle between the preference vector and each phone's feature vector.",
+                "Higher similarity means the phone better matches the user's desired profile.",
             ],
         },
     )
@@ -327,40 +233,60 @@ def _read_preferences(request):
         "storage": int(request.POST.get("storage", 6)),
         "battery": int(request.POST.get("battery", 4)),
         "camera": int(request.POST.get("camera", 4)),
-        "preferred_series": request.POST.get("preferred_series", "any"),
+        "preferred_brand": request.POST.get("preferred_brand", "any"),
     }
 
 
-def _build_recommendation(phone, preferences):
-    score = 0
+def _build_preference_vector(preferences):
+    """Build normalized preference vector for cosine similarity."""
+    # Map preferences to feature scale (1-4 normalized to 0-1)
+    return [
+        preferences["budget"] / 20000,           # budget: 0-20000
+        preferences["performance"] / 4,           # performance: 1-4
+        preferences["charging"] / 150,            # charging: 0-150W
+        preferences["screen_size"] / 10,         # screen size: 0-10 inch
+        preferences["storage"] / 1024,            # storage: 0-1024GB (using level as proxy)
+        preferences["battery"] / 7000,            # battery: 0-7000mAh
+        preferences["camera"] / 4,               # camera level: 1-4
+    ]
+
+
+def _build_phone_vector(phone):
+    """Build normalized phone feature vector for cosine similarity."""
+    return [
+        phone.price / 20000,
+        phone.ram / 24,                         # max ~24GB RAM in dataset
+        phone.charging / 240,                    # max ~240W charging
+        phone.screen_size / 10,
+        phone.rom / 1024,                        # storage in GB
+        phone.battery / 7000,
+        phone.rear_camera / 20000,               # max ~200MP in dataset
+    ]
+
+
+def _cosine_similarity(vec1, vec2):
+    """Calculate cosine similarity between two vectors."""
+    dot_product = sum(a * b for a, b in zip(vec1, vec2))
+    magnitude1 = math.sqrt(sum(a * a for a in vec1))
+    magnitude2 = math.sqrt(sum(b * b for b in vec2))
+
+    if magnitude1 == 0 or magnitude2 == 0:
+        return 0.0
+
+    return dot_product / (magnitude1 * magnitude2)
+
+
+def _compute_breakdown(phone, preferences, pref_vec, phone_vec):
+    """Compute contribution of each feature to the similarity score."""
+    labels = ["Budget", "Performance", "Charging", "Screen Size", "Storage", "Battery", "Camera"]
     breakdown = []
 
-    for preference_key, phone_key, weight in SCORING_FIELDS:
-        target = preferences[preference_key]
-        actual = phone[phone_key]
+    for i, (label, p_val, ph_val) in enumerate(zip(labels, pref_vec, phone_vec)):
+        if p_val > 0:
+            contribution = (p_val * ph_val) / max(sum(pref_vec), 0.001)
+            breakdown.append({
+                "label": label,
+                "score": round(contribution * 100, 1),
+            })
 
-        if preference_key == "budget":
-            closeness = max(0, 1 - abs(target - actual) / max(target, actual, 1))
-        else:
-            closeness = max(0, 1 - abs(target - actual) / max(target, actual, 1))
-
-        weighted = closeness * weight * 100
-        score += weighted
-        breakdown.append(
-            {
-                "label": preference_key.replace("_", " ").title(),
-                "score": round(weighted, 1),
-            }
-        )
-
-    series_bonus = 0
-    if preferences["preferred_series"] != "any" and preferences["preferred_series"] in phone["series"].lower():
-        series_bonus = 6
-        score += series_bonus
-
-    return {
-        **phone,
-        "match_score": round(score, 1),
-        "series_bonus": series_bonus,
-        "breakdown": sorted(breakdown, key=lambda item: item["score"], reverse=True),
-    }
+    return sorted(breakdown, key=lambda x: x["score"], reverse=True)
