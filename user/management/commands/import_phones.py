@@ -11,10 +11,12 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         csv_path = os.path.join(settings.BASE_DIR, 'phones_data.csv')
 
+        phones_to_upsert = []
+        existing_models = set(Phone.objects.values_list('model', flat=True))
+
         with open(csv_path, 'r', encoding='utf-8-sig') as f:
             reader = csv.reader(f)
             header = next(reader)
-            count = 0
             for row in reader:
                 if len(row) < 14:
                     continue
@@ -76,24 +78,42 @@ class Command(BaseCommand):
                 except:
                     screen_size = 0.0
 
-                Phone.objects.update_or_create(
-                    model=model,
-                    defaults={
-                        'brand': brand,
-                        'price': price,
-                        'cpu': cpu,
-                        'ram': ram,
-                        'rom': rom,
-                        'charging': charging,
-                        'battery': battery,
-                        'screen_refresh_rate': screen_refresh,
-                        'screen_resolution': screen_res,
-                        'weight': weight,
-                        'front_camera': front_cam,
-                        'rear_camera': rear_cam,
-                        'screen_size': screen_size,
-                    }
-                )
-                count += 1
+                if model in existing_models:
+                    Phone.objects.filter(model=model).update(
+                        brand=brand,
+                        price=price,
+                        cpu=cpu,
+                        ram=ram,
+                        rom=rom,
+                        charging=charging,
+                        battery=battery,
+                        screen_refresh_rate=screen_refresh,
+                        screen_resolution=screen_res,
+                        weight=weight,
+                        front_camera=front_cam,
+                        rear_camera=rear_cam,
+                        screen_size=screen_size,
+                    )
+                else:
+                    phones_to_upsert.append(Phone(
+                        brand=brand,
+                        model=model,
+                        price=price,
+                        cpu=cpu,
+                        ram=ram,
+                        rom=rom,
+                        charging=charging,
+                        battery=battery,
+                        screen_refresh_rate=screen_refresh,
+                        screen_resolution=screen_res,
+                        weight=weight,
+                        front_camera=front_cam,
+                        rear_camera=rear_cam,
+                        screen_size=screen_size,
+                    ))
 
+        if phones_to_upsert:
+            Phone.objects.bulk_create(phones_to_upsert, ignore_conflicts=True)
+
+        count = Phone.objects.count()
         self.stdout.write(self.style.SUCCESS(f'Successfully imported {count} phones'))
