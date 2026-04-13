@@ -483,8 +483,8 @@ a:hover {
 }
 
 .hero-grid > div:hover {
-    box-shadow: 0 8px 32px rgba(0, 113, 227, 0.12);
-    transform: translateY(-2px);
+    box-shadow: 0 0 0 1px rgba(0, 113, 227, 0.08), 0 12px 40px rgba(0, 113, 227, 0.2);
+    transform: translateY(-3px);
 }
 
 .hero-grid > div > strong {
@@ -515,8 +515,8 @@ a:hover {
 }
 
 .signal-card:hover {
-    box-shadow: 0 8px 32px rgba(0, 113, 227, 0.15);
-    transform: translateY(-2px);
+    box-shadow: 0 0 0 1px rgba(0, 113, 227, 0.08), 0 12px 40px rgba(0, 113, 227, 0.2);
+    transform: translateY(-3px);
 }
 
 .signal-card:hover::before {
@@ -605,8 +605,8 @@ a:hover {
 .phone-preview:hover,
 .alt-card:hover,
 .feature-list article:hover {
-    box-shadow: 0 8px 32px rgba(0, 113, 227, 0.12);
-    transform: translateY(-2px);
+    box-shadow: 0 0 0 1px rgba(0, 113, 227, 0.08), 0 12px 40px rgba(0, 113, 227, 0.2);
+    transform: translateY(-3px);
 }
 
 .feature-list article {
@@ -963,8 +963,8 @@ select option {
 .winner-card:hover,
 .explain-card:hover,
 .method-card:hover {
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-2px);
+    box-shadow: 0 0 0 1px rgba(0, 113, 227, 0.08), 0 12px 40px rgba(0, 113, 227, 0.2);
+    transform: translateY(-3px);
 }
 
 /* ---------- Method Page ---------- */
