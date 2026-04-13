@@ -7,10 +7,11 @@
     <title>{% block title %}Reasonable Or Not{% endblock %}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/apple-style.css' %}">
 </head>
 <body>
+    <div class="cursor-glow" id="cursorGlow"></div>
     <div class="site-shell">
         <header class="topbar">
             <a class="brand" href="{% url 'index' %}">
@@ -34,5 +35,53 @@
         </header>
         {% block content %}{% endblock %}
     </div>
+
+    <script>
+    // ========== Cursor Glow Effect ==========
+    const cursorGlow = document.getElementById('cursorGlow');
+    let mouseX = 0, mouseY = 0;
+    let glowX = 0, glowY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+
+    function animateGlow() {
+        glowX += (mouseX - glowX) * 0.1;
+        glowY += (mouseY - glowY) * 0.1;
+        cursorGlow.style.left = glowX + 'px';
+        cursorGlow.style.top = glowY + 'px';
+        requestAnimationFrame(animateGlow);
+    }
+    animateGlow();
+
+    // ========== Scroll Reveal Animation ==========
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px 0px -80px 0px',
+        threshold: 0.1
+    };
+
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, observerOptions);
+
+    // Add reveal classes to elements
+    document.querySelectorAll('.hero-copy, .hero-panel, .section-heading, .phone-strip, .feature-list, .alternatives, .form-layout, .results-layout, .method-layout, .auth-panel').forEach(el => {
+        el.classList.add('reveal');
+        revealObserver.observe(el);
+    });
+
+    // Stagger animation for card grids
+    document.querySelectorAll('.hero-grid, .phone-strip, .alternatives, .feature-list').forEach(el => {
+        el.classList.add('stagger');
+        revealObserver.observe(el);
+    });
+    </script>
 </body>
 </html>
