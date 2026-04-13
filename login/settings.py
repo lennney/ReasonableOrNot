@@ -144,5 +144,8 @@ GZIP_CONTENT_TYPES = (
 # 仅使用 whitenoise 中间件直接从 static/ 目录服务文件
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 WHITENOISE_ROOT = BASE_DIR / 'static'
-WHITENOISE_AUTOREFRESH = False  # 生产环境不需要动态刷新
+WHITENOISE_USE_FINDERS = True  # 让 whitenoise 扫描 STATICFILES_DIRS 中的文件
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
