@@ -1,8 +1,12 @@
 # Reasonable Or Not / 手机推荐系统
 
+**Live Demo / 在线演示**: https://reasonableornot-production.up.railway.app
+
 A Django-based phone recommendation engine that matches user preferences against a database of 300+ Chinese smartphone models using **cosine similarity**.
 
 一个基于 Django 的手机推荐引擎，通过**余弦相似度算法**，将用户偏好与 300+ 款国产手机数据库进行匹配。
+
+**Deployed on Railway (PostgreSQL + Gunicorn) / 托管于 Railway (PostgreSQL + Gunicorn)**
 
 ---
 
