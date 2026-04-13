@@ -22,9 +22,9 @@
                 </span>
             </a>
             <nav class="topnav">
-                <a href="{% url 'index' %}" {% if request.path == '/' %}class="active"{% endif %}>Home</a>
-                <a href="{% url 'requirement' %}" {% if request.path == '/requirement/' %}class="active"{% endif %}>Try Demo</a>
-                <a href="{% url 'result' %}" {% if request.path == '/result/' %}class="active"{% endif %}>Method</a>
+                <a href="{% url 'index' %}" {% if request.path == '/index' %}class="active"{% endif %}>Home</a>
+                <a href="{% url 'requirement' %}" {% if request.path == '/requirement' %}class="active"{% endif %}>Try Demo</a>
+                <a href="{% url 'result' %}" {% if request.path == '/result' %}class="active"{% endif %}>Method</a>
             </nav>
         </header>
         {% block content %}{% endblock %}
