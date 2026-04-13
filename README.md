@@ -1,110 +1,136 @@
-# Reasonable Or Not
+# Reasonable Or Not / 手机推荐系统
 
-Reasonable Or Not is a refreshed Django demo project for mobile phone recommendation. It started as an earlier coursework-style project, and this upgrade keeps the original idea while improving the product flow, visual presentation, and repository quality so it can better represent my development ability on GitHub.
+A Django-based phone recommendation engine that matches user preferences against a database of 300+ Chinese smartphone models using **cosine similarity**.
 
-## Project Overview
+一个基于 Django 的手机推荐引擎，通过**余弦相似度算法**，将用户偏好与 300+ 款国产手机数据库进行匹配。
 
-This project helps users describe what kind of phone they want, then recommends the most suitable device from a small iPhone dataset. The upgrade focuses on two goals:
+---
 
-- preserve the original recommendation idea and scoring concept
-- turn the project into a cleaner, more portfolio-ready web application
+## Project Overview / 项目概述
 
-## What I Upgraded
+**Reasonable Or Not** transforms a classroom recommender concept into a polished web application. Users fill out a preference form (budget, performance, charging speed, screen size, storage, battery, camera), and the system returns the best-matched phone with a similarity score and alternatives.
 
-### Product Experience
+**Reasonable Or Not** 将课堂作业中的推荐概念打造为完整的 Web 应用。用户填写偏好表单（预算、性能、充电速度、屏幕大小、存储、电池、相机），系统返回最佳匹配机型、相似度评分及备选方案。
 
-- redesigned the homepage into a clearer product-style landing page
-- rebuilt login and registration pages with a unified visual system
-- improved the requirement form so user preferences are easier to understand and submit
-- created a recommendation result page that highlights the best match and nearby alternatives
-- added a methodology page to explain the recommendation logic in a presentation-friendly way
+---
 
-### Engineering Improvements
+## Tech Stack / 技术栈
 
-- reorganized the Django views into a more maintainable structure
-- removed the older one-off output style and replaced it with template-driven result rendering
-- added a weighted recommendation model based on budget, performance, charging, screen size, storage, battery, and camera preferences
-- improved route naming and session-based login flow
-- fixed template directory configuration for a more standard Django setup
-- added project documentation and repository hygiene files
+| Layer | Technology |
+|-------|------------|
+| Backend | Django 3.2 / Python 3.11 |
+| Database | PostgreSQL (Railway) / SQLite (local) |
+| WSGI Server | Gunicorn |
+| Static Files | WhiteNoise |
+| Frontend | Vanilla CSS (Apple-style design system) |
+| Algorithm | Cosine similarity on normalized feature vectors |
 
-## Tech Stack
+---
 
-- Python
-- Django
-- HTML templates
-- CSS
-- SQLite
+## Recommendation Algorithm / 推荐算法
 
-## Recommendation Logic
+The system converts both user preferences and phone specs into normalized feature vectors, then computes **cosine similarity** between them:
 
-The recommendation engine uses a weighted scoring approach:
+系统将用户偏好和手机规格分别转换为归一化特征向量，计算二者之间的**余弦相似度**：
 
-1. Read the user's target profile from the requirement form.
-2. Compare each phone against the selected budget and capability preferences.
-3. Calculate closeness scores for each dimension.
-4. Apply weights to important factors such as budget and storage.
-5. Rank all phones by total match score.
-6. Return the strongest recommendation plus several alternatives.
+```
+cos(θ) = (A · B) / (|A| × |B|)
+```
 
-This makes the project easy to extend later with:
+Feature dimensions / 特征维度：Budget · Performance · Charging · Screen Size · Storage · Battery · Camera
 
-- larger datasets
-- more phone brands
-- user history
-- saved comparisons
-- visualization of score breakdowns
+---
 
-## Pages
+## Pages / 页面
 
-- `/` or `/user/index`: project landing page
-- `/user/login`: sign in page
-- `/user/register`: account creation page
-- `/user/requirement`: phone preference form
-- `/user/recommend`: recommendation result page
-- `/user/result`: methodology and value ranking page
+| Route | Description |
+|-------|-------------|
+| `/user/index` | Landing page with featured phones / 首页展示精选机型 |
+| `/user/register` | Account registration / 用户注册 |
+| `/user/login` | User login / 用户登录 |
+| `/user/logout` | Session logout / 登出 |
+| `/user/requirement` | Multi-step preference form / 偏好表单 |
+| `/user/recommend` | Best match + alternatives / 最佳匹配及备选 |
+| `/user/result` | Value ranking + methodology / 性价比排名与方法论 |
 
-## Local Setup
+---
 
-1. Create and activate a virtual environment.
-2. Install dependencies:
+## Local Setup / 本地运行
 
 ```bash
+# 1. Clone / 克隆
+git clone https://github.com/lennney/ReasonableOrNot.git
+cd ReasonableOrNot
+
+# 2. Virtual environment / 虚拟环境
+python -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+
+# 3. Install dependencies / 安装依赖
 pip install -r requirements.txt
-```
 
-3. Run migrations:
-
-```bash
+# 4. Database migrations / 数据库迁移
 python manage.py migrate
-```
 
-4. Start the development server:
+# 5. Import phone data (optional) / 导入手机数据（非必须）
+python manage.py import_phones
 
-```bash
+# 6. Run development server / 启动开发服务器
 python manage.py runserver
 ```
 
-5. Open:
+Open http://127.0.0.1:8000 in your browser.
 
-```text
-http://127.0.0.1:8000/
+---
+
+## Production Deployment / 生产部署
+
+The project is configured for **Railway** with PostgreSQL:
+
+```bash
+# Key environment variables / 关键环境变量
+DATABASE_URL=postgres://user:password@host:port/dbname
+DEBUG=False
 ```
 
-## Why This Project Is Useful In My Portfolio
+Static files are served by WhiteNoise without `collectstatic`.
 
-This project demonstrates that I can:
+---
 
-- refactor and upgrade an existing codebase instead of only creating new ones
-- improve both the interface and the back-end logic
-- turn an early prototype into a more complete product demo
-- explain implementation ideas clearly through documentation
-- prepare a project for GitHub presentation and technical discussion
+## Project Structure / 项目结构
 
-## Future Directions
+```
+ReasonableOrNot/
+├── login/              # Django project settings / 项目配置
+│   ├── settings.py
+│   ├── urls.py
+│   ├── wsgi.py / asgi.py
+├── user/               # Main app / 主应用
+│   ├── models.py       # User & Phone models
+│   ├── views.py        # All page logic + cosine similarity
+│   ├── urls.py
+│   ├── admin.py
+│   └── management/commands/import_phones.py
+├── templates/user/     # HTML templates
+├── static/css/         # Stylesheets
+├── phones_data.csv     # Phone database (300+ models)
+└── requirements.txt
+```
 
-- connect the recommendation system to a richer database
-- add admin-side device management
-- support more brands and more detailed filters
-- store recommendation history per user
-- add charts or explanation views for scoring transparency
+---
+
+## Database Schema / 数据库结构
+
+**User** — `username`, `password` (MD5+salt), `email`
+
+**Phone** — `brand`, `model`, `price`, `cpu`, `ram`, `rom`, `charging`, `battery`, `screen_refresh_rate`, `screen_resolution`, `weight`, `front_camera`, `rear_camera`, `screen_size`
+
+---
+
+## Why This Project / 项目价值
+
+- Demonstrates **end-to-end web development** from database design to UI
+- Shows **algorithmic thinking** (cosine similarity, vector normalization)
+- Portfolio-ready **Apple-style frontend** with scroll animations and cursor glow
+- Clean Django architecture with **separation of concerns**
+- Handles **Chinese smartphone market data** (300+ real models)
