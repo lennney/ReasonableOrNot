@@ -290,12 +290,12 @@ a:hover {
 
 .nav-cta:hover {
     background: var(--accent-hover);
-    transform: scale(1.03);
-    box-shadow: 0 4px 16px rgba(0, 113, 227, 0.35);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 113, 227, 0.4);
 }
 
 .nav-cta:active {
-    transform: scale(0.97);
+    transform: translateY(0);
 }
 
 /* ---------- Buttons ---------- */
@@ -355,8 +355,8 @@ a:hover {
 .button.secondary:hover {
     background: var(--bg-page);
     border-color: var(--text-tertiary);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-sm);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
 .button.secondary:active {
@@ -1033,8 +1033,9 @@ select option {
 }
 
 .step-item:hover {
-    transform: translateX(4px);
     background: rgba(0, 113, 227, 0.05);
+    transform: translateX(4px);
+    border-left: 3px solid var(--accent);
 }
 
 .step-num {
@@ -1271,7 +1272,7 @@ select option {
 }
 
 .score-ring:hover {
-    transform: scale(1.05);
+    transform: translateY(-4px);
     box-shadow: 0 0 40px rgba(52, 199, 89, 0.4);
     border-color: var(--success);
 }
@@ -1309,6 +1310,7 @@ select option {
 .mini-row:hover {
     background: rgba(0, 113, 227, 0.05);
     transform: translateX(4px);
+    border-left: 3px solid var(--accent);
 }
 
 .mini-row span:first-child {
