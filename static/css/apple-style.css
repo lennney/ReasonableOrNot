@@ -895,6 +895,24 @@ select option {
 .table-lite {
     display: grid;
     gap: var(--space-sm);
+    max-height: 400px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+    padding-right: var(--space-xs);
+}
+
+.table-lite::-webkit-scrollbar {
+    width: 6px;
+}
+
+.table-lite::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.table-lite::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border-radius: var(--radius-full);
 }
 
 .table-row {
@@ -1378,7 +1396,148 @@ select option {
     border: 1px solid rgba(52, 199, 89, 0.2);
 }
 
-/* ---------- Additional Elements ---------- */
+/* ---------- Custom Select Dropdown ---------- */
+.custom-select {
+    position: relative;
+    width: 100%;
+}
+
+.custom-select-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 48px;
+    padding: 0 var(--space-md);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-strong);
+    background: var(--bg-card);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all var(--duration-fast) var(--ease-apple);
+    gap: var(--space-sm);
+}
+
+.custom-select-trigger:hover {
+    border-color: var(--text-tertiary);
+}
+
+.custom-select-trigger.open {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-light);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.custom-select-trigger .select-value {
+    flex: 1;
+    text-align: left;
+}
+
+.custom-select-trigger .select-arrow {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    transition: transform var(--duration-fast) var(--ease-apple);
+    color: var(--text-secondary);
+}
+
+.custom-select-trigger.open .select-arrow {
+    transform: rotate(180deg);
+}
+
+.custom-select-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--accent);
+    border-top: none;
+    border-bottom-left-radius: var(--radius-lg);
+    border-bottom-right-radius: var(--radius-lg);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 0 0 3px var(--accent-light);
+    z-index: 100;
+    overflow: hidden;
+    display: none;
+}
+
+.custom-select-dropdown.open {
+    display: block;
+    animation: selectOpen 0.2s var(--ease-apple);
+}
+
+@keyframes selectOpen {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.custom-select-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-md) var(--space-md);
+    cursor: pointer;
+    transition: background var(--duration-fast) var(--ease-apple);
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    gap: var(--space-sm);
+}
+
+.custom-select-option:hover {
+    background: var(--accent-light);
+    color: var(--accent);
+}
+
+.custom-select-option.selected {
+    background: var(--accent);
+    color: #FFFFFF;
+    font-weight: 500;
+}
+
+.custom-select-option.selected::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.8);
+}
+
+.custom-select-option .option-label {
+    flex: 1;
+}
+
+.custom-select-option .option-hint {
+    font-size: 0.8rem;
+    color: var(--text-tertiary);
+}
+
+.custom-select-option.selected .option-hint {
+    color: rgba(255,255,255,0.7);
+}
+
+/* Hidden native select (for form submission) */
+.custom-select-native {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    width: 0;
+    height: 0;
+}
+
+/* ---------- Form Fields with Custom Select ---------- */
+.field-grid .custom-select,
+.field-group .custom-select {
+    width: 100%;
+}
 .alt-topline {
     display: flex;
     justify-content: space-between;

@@ -158,7 +158,7 @@ def result(request):
             "value_score": round(perf_score, 2),
         })
 
-    ranked_by_value = sorted(phone_list, key=lambda x: x["value_score"], reverse=True)
+    ranked_by_value = sorted(phone_list, key=lambda x: x["value_score"], reverse=True)[:20]
 
     return render(
         request,
