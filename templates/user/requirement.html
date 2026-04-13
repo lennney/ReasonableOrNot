@@ -14,82 +14,66 @@
         <form class="preference-form" method="post" action="{% url 'recommend' %}">
             {% csrf_token %}
             <div class="field-group">
-                <label>
-                    <span>Preferred brand</span>
-                    <select name="preferred_brand">
-                        <option value="any">Any</option>
-                        {% for brand in brands %}
-                        <option value="{{ brand }}">{{ brand }}</option>
-                        {% endfor %}
-                    </select>
-                </label>
-                <label>
-                    <span>Budget target</span>
-                    <select name="budget">
-                        <option value="2000">Level 1 · around ¥2,000</option>
-                        <option value="4000">Level 2 · around ¥4,000</option>
-                        <option value="8000" selected>Level 3 · around ¥8,000</option>
-                        <option value="12000">Level 4 · around ¥12,000</option>
-                        <option value="16000">Level 5 · around ¥16,000</option>
-                    </select>
-                </label>
+                <label for="id_preferred_brand">Preferred brand</label>
+                <select id="id_preferred_brand" name="preferred_brand">
+                    <option value="any">Any</option>
+                    {% for brand in brands %}
+                    <option value="{{ brand }}">{{ brand }}</option>
+                    {% endfor %}
+                </select>
+                <label for="id_budget">Budget target</label>
+                <select id="id_budget" name="budget">
+                    <option value="2000">Level 1 · around ¥2,000</option>
+                    <option value="4000">Level 2 · around ¥4,000</option>
+                    <option value="8000" selected>Level 3 · around ¥8,000</option>
+                    <option value="12000">Level 4 · around ¥12,000</option>
+                    <option value="16000">Level 5 · around ¥16,000</option>
+                </select>
             </div>
 
             <div class="field-grid">
-                <label>
-                    <span>Performance</span>
-                    <select name="performance">
-                        <option value="1">Level 1</option>
-                        <option value="2">Level 2</option>
-                        <option value="3" selected>Level 3</option>
-                        <option value="4">Level 4</option>
-                    </select>
-                </label>
-                <label>
-                    <span>Charging</span>
-                    <select name="charging">
-                        <option value="1">Level 1 (0-30W)</option>
-                        <option value="2">Level 2 (31-60W)</option>
-                        <option value="3">Level 3 (61-100W)</option>
-                        <option value="4">Level 4 (100W+)</option>
-                    </select>
-                </label>
-                <label>
-                    <span>Screen size</span>
-                    <select name="screen_size">
-                        <option value="6.0">Compact (6.0")</option>
-                        <option value="6.5" selected>Medium (6.5")</option>
-                        <option value="6.8">Large (6.8")</option>
-                        <option value="7.5">Tablet (7.5"+)</option>
-                    </select>
-                </label>
-                <label>
-                    <span>Storage</span>
-                    <select name="storage">
-                        <option value="128">128GB</option>
-                        <option value="256" selected>256GB</option>
-                        <option value="512">512GB</option>
-                        <option value="1024">1TB</option>
-                    </select>
-                </label>
-                <label>
-                    <span>Battery</span>
-                    <select name="battery">
-                        <option value="1">Level 1 (3000-4000mAh)</option>
-                        <option value="2">Level 2 (4000-5000mAh)</option>
-                        <option value="3" selected>Level 3 (5000-5500mAh)</option>
-                        <option value="4">Level 4 (5500mAh+)</option>
-                    </select>
-                </label>
-                <label>
-                    <span>Camera</span>
-                    <select name="camera">
-                        <option value="1">Level 1 (Basic)</option>
-                        <option value="2">Level 2 (Good)</option>
-                        <option value="3" selected>Level 3 (Advanced)</option>
-                        <option value="4">Level 4 (Flagship)</option>
-                    </select>
-                </label>
+                <label for="id_performance">Performance</label>
+                <select id="id_performance" name="performance">
+                    <option value="1">Level 1</option>
+                    <option value="2">Level 2</option>
+                    <option value="3" selected>Level 3</option>
+                    <option value="4">Level 4</option>
+                </select>
+                <label for="id_charging">Charging</label>
+                <select id="id_charging" name="charging">
+                    <option value="1">Level 1 (0-30W)</option>
+                    <option value="2">Level 2 (31-60W)</option>
+                    <option value="3">Level 3 (61-100W)</option>
+                    <option value="4">Level 4 (100W+)</option>
+                </select>
+                <label for="id_screen_size">Screen size</label>
+                <select id="id_screen_size" name="screen_size">
+                    <option value="6.0">Compact (6.0")</option>
+                    <option value="6.5" selected>Medium (6.5")</option>
+                    <option value="6.8">Large (6.8")</option>
+                    <option value="7.5">Tablet (7.5"+)</option>
+                </select>
+                <label for="id_storage">Storage</label>
+                <select id="id_storage" name="storage">
+                    <option value="128">128GB</option>
+                    <option value="256" selected>256GB</option>
+                    <option value="512">512GB</option>
+                    <option value="1024">1TB</option>
+                </select>
+                <label for="id_battery">Battery</label>
+                <select id="id_battery" name="battery">
+                    <option value="1">Level 1 (3000-4000mAh)</option>
+                    <option value="2">Level 2 (4000-5000mAh)</option>
+                    <option value="3" selected>Level 3 (5000-5500mAh)</option>
+                    <option value="4">Level 4 (5500mAh+)</option>
+                </select>
+                <label for="id_camera">Camera</label>
+                <select id="id_camera" name="camera">
+                    <option value="1">Level 1 (Basic)</option>
+                    <option value="2">Level 2 (Good)</option>
+                    <option value="3" selected>Level 3 (Advanced)</option>
+                    <option value="4">Level 4 (Flagship)</option>
+                </select>
             </div>
 
             <button class="button primary" type="submit">Generate Recommendation</button>

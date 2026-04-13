@@ -709,24 +709,33 @@ a:hover {
 
 .field-group {
     display: grid;
-    gap: var(--space-md);
+    gap: var(--space-sm);
 }
 
 .field-group label {
-    display: grid;
-    gap: var(--space-xs);
-}
-
-.field-group label span {
     font-weight: 500;
     font-size: 0.9rem;
     color: var(--text-primary);
+}
+
+.field-group select {
+    margin-top: var(--space-xs);
 }
 
 .field-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: var(--space-md);
+}
+
+.field-grid label {
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+}
+
+.field-grid select {
+    margin-top: var(--space-xs);
 }
 
 /* ---------- Form Layout ---------- */
@@ -897,6 +906,7 @@ select option {
     gap: var(--space-sm);
     max-height: 400px;
     overflow-y: auto;
+    overflow-x: hidden;
     scrollbar-width: thin;
     scrollbar-color: var(--border-strong) transparent;
     padding-right: var(--space-xs);
@@ -919,13 +929,23 @@ select option {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: var(--space-md) var(--space-lg);
+    padding: var(--space-sm) var(--space-md);
     background: var(--bg-card);
     border-radius: var(--radius-lg);
     color: var(--text-secondary);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     border: 1px solid var(--border);
     transition: all var(--duration-fast) var(--ease-apple);
+    min-width: 0;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+}
+
+.table-row span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
 }
 
 .table-row:hover {
@@ -1361,14 +1381,13 @@ select option {
 }
 
 .auth-form label {
-    display: grid;
-    gap: var(--space-xs);
-}
-
-.auth-form label span {
     font-weight: 500;
     font-size: 0.9rem;
     color: var(--text-primary);
+}
+
+.auth-form input {
+    margin-top: var(--space-xs);
 }
 
 .auth-footnote {

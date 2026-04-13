@@ -15,14 +15,10 @@
             {% if error %}
             <div class="message error">{{ error }}</div>
             {% endif %}
-            <label>
-                <span>Username</span>
-                <input type="text" name="username" placeholder="Enter your username">
-            </label>
-            <label>
-                <span>Password</span>
-                <input type="password" name="password" placeholder="Enter your password">
-            </label>
+            <label for="id_username">Username</label>
+            <input id="id_username" type="text" name="username" placeholder="Enter your username" autocomplete="username">
+            <label for="id_password">Password</label>
+            <input id="id_password" type="password" name="password" placeholder="Enter your password" autocomplete="current-password">
             <button class="button primary" type="submit">Login</button>
             <p class="auth-footnote">No account yet? <a href="{% url 'register' %}">Create one here</a>.</p>
         </form>

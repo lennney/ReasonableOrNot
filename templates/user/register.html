@@ -18,18 +18,12 @@
             {% if success %}
             <div class="message success">{{ success }}</div>
             {% endif %}
-            <label>
-                <span>Username</span>
-                <input type="text" name="username" placeholder="Choose a username">
-            </label>
-            <label>
-                <span>Password</span>
-                <input type="password" name="password" placeholder="Create a password">
-            </label>
-            <label>
-                <span>Email</span>
-                <input type="email" name="email" placeholder="Enter your email">
-            </label>
+            <label for="id_username">Username</label>
+            <input id="id_username" type="text" name="username" placeholder="Choose a username" autocomplete="username">
+            <label for="id_password">Password</label>
+            <input id="id_password" type="password" name="password" placeholder="Create a password" autocomplete="new-password">
+            <label for="id_email">Email</label>
+            <input id="id_email" type="email" name="email" placeholder="Enter your email" autocomplete="email">
             <button class="button primary" type="submit">Register</button>
             <p class="auth-footnote">Already registered? <a href="{% url 'login' %}">Go to login</a>.</p>
         </form>
