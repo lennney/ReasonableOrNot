@@ -614,13 +614,14 @@ a:hover {
 .feature-list article::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--accent), var(--purple));
+    top: 12px;
+    left: 12px;
+    width: 3px;
+    height: calc(100% - 24px);
+    background: var(--accent);
     opacity: 0;
-    transition: opacity var(--duration-normal) var(--ease-apple);
+    border-radius: 2px;
+    transition: opacity var(--duration-fast) var(--ease-apple);
 }
 
 .phone-preview:hover::before,
