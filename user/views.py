@@ -1,7 +1,7 @@
-import hashlib
 import math
 
 from django.conf import settings
+from django.contrib.auth.hashers import check_password, make_password
 from django.shortcuts import redirect, render
 
 from .models import Phone, User
@@ -37,9 +37,9 @@ def login(request):
             },
         )
 
-    hashed_password = _hash_password(password)
-    user = User.objects.filter(username=username, password=hashed_password).first()
-    if not user:
+    hashed_password = make_password(password)
+    user = User.objects.filter(username=username).first()
+    if not user or not check_password(password, user.password):
         return render(
             request,
             "user/login.html",
@@ -59,7 +59,7 @@ def logout(request):
 
 
 def requirement(request):
-    brands = list(Phone.objects.values_list('brand', flat=True).distinct())
+    brands = list(Phone.objects.values_list('brand', flat=True).distinct().order_by('brand'))
     return render(
         request,
         "user/requirement.html",
@@ -82,6 +82,11 @@ def recommend(request):
 
     preferences = _read_preferences(request)
     phones = Phone.objects.all()
+
+    # Filter by preferred brand if not "any"
+    preferred_brand = preferences.get("preferred_brand")
+    if preferred_brand and preferred_brand != "any":
+        phones = phones.filter(brand=preferred_brand)
 
     if not phones.exists():
         return render(
@@ -205,23 +210,12 @@ def register(request):
 
     User.objects.create(
         username=username,
-        password=_hash_password(password),
+        password=make_password(password),
         email=email,
     )
 
-    return render(
-        request,
-        "user/register.html",
-        {
-            "success": "Registration completed. You can now sign in and start testing the recommender.",
-            "username": request.session.get("username"),
-        },
-    )
-
-
-def _hash_password(password):
-    salted = password + settings.SECRET_KEY
-    return hashlib.md5(salted.encode("utf-8")).hexdigest()
+    request.session["username"] = username
+    return redirect("requirement")
 
 
 def _read_preferences(request):
