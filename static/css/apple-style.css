@@ -483,8 +483,8 @@ a:hover {
 }
 
 .hero-grid > div:hover {
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-4px);
+    box-shadow: 0 8px 32px rgba(0, 113, 227, 0.12);
+    transform: translateY(-2px);
 }
 
 .hero-grid > div > strong {
@@ -514,21 +514,8 @@ a:hover {
     overflow: hidden;
 }
 
-.signal-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(0, 113, 227, 0.5), transparent);
-    opacity: 0;
-    transition: opacity var(--duration-normal) var(--ease-apple);
-}
-
 .signal-card:hover {
-    border-color: rgba(0, 113, 227, 0.4);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 113, 227, 0.15);
     transform: translateY(-2px);
 }
 
@@ -612,30 +599,14 @@ a:hover {
 .phone-preview::before,
 .alt-card::before,
 .feature-list article::before {
-    content: '';
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    width: 3px;
-    height: calc(100% - 24px);
-    background: var(--accent);
-    opacity: 0;
-    border-radius: 2px;
-    transition: opacity var(--duration-fast) var(--ease-apple);
-}
-
-.phone-preview:hover::before,
-.alt-card:hover::before,
-.feature-list article:hover::before {
-    opacity: 1;
+    display: none;
 }
 
 .phone-preview:hover,
 .alt-card:hover,
 .feature-list article:hover {
-    box-shadow: var(--shadow-xl);
-    transform: translateY(-6px);
-    border-color: rgba(0, 113, 227, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 113, 227, 0.12);
+    transform: translateY(-2px);
 }
 
 .feature-list article {
@@ -1040,8 +1011,7 @@ select option {
 
 .step-item:hover {
     background: rgba(0, 113, 227, 0.05);
-    transform: translateX(4px);
-    border-left: 3px solid var(--accent);
+    transform: translateY(-1px);
 }
 
 .step-num {
@@ -1315,8 +1285,7 @@ select option {
 
 .mini-row:hover {
     background: rgba(0, 113, 227, 0.05);
-    transform: translateX(4px);
-    border-left: 3px solid var(--accent);
+    transform: translateY(-1px);
 }
 
 .mini-row span:first-child {
@@ -2355,12 +2324,6 @@ select option {
     border: 1px solid var(--border);
     transition: all var(--duration-normal) var(--ease-apple);
     cursor: pointer;
-}
-
-.alt-card:hover {
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-4px);
-    border-color: rgba(0, 113, 227, 0.2);
 }
 
 .alt-card-header {
