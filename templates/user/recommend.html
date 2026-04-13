@@ -3,7 +3,7 @@
 {% block title %}Reasonable Or Not | Recommendation{% endblock %}
 
 {% block content %}
-<main class="results-page">
+<main class="recommend-page">
     <section class="section-heading compact">
         <p class="eyebrow">Recommendation result</p>
         <h1>{{ best_match.brand }} {{ best_match.model }} is the strongest match.</h1>
@@ -11,7 +11,7 @@
     </section>
 
     {% if error %}
-    <div class="error-message">{{ error }}</div>
+    <div class="error-banner">{{ error }}</div>
     {% endif %}
 
     <section class="results-layout">
