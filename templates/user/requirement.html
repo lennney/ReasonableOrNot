@@ -3,211 +3,120 @@
 {% block title %}Reasonable Or Not | Requirements{% endblock %}
 
 {% block content %}
-<main class="req-page">
-    <header class="req-header reveal">
+<main class="form-page">
+    <section class="section-heading compact">
         <p class="eyebrow">Preference capture</p>
-        <h1>Find your perfect phone.</h1>
-        <p>Answer a few questions and we'll match you with the best options.</p>
-    </header>
+        <h1>Describe the phone profile you want.</h1>
+        <p>This page turns user expectations into a weighted recommendation request, which makes the project easier to explain in interviews and on GitHub.</p>
+    </section>
 
-    <div class="req-layout">
-        <!-- Form -->
-        <form class="req-form reveal" method="post" action="{% url 'recommend' %}">
+    <section class="form-layout">
+        <form class="preference-form" method="post" action="{% url 'recommend' %}">
             {% csrf_token %}
-
-            <!-- Step 1: Basics -->
-            <div class="req-step">
-                <div class="step-indicator">
-                    <span class="step-num">1</span>
-                    <span class="step-label">Basics</span>
-                </div>
-
-                <div class="field-row">
-                    <div class="field-group">
-                        <label>
-                            <span>Preferred brand</span>
-                            <select name="preferred_brand">
-                                <option value="any">Any Brand</option>
-                                {% for brand in brands %}
-                                <option value="{{ brand }}">{{ brand }}</option>
-                                {% endfor %}
-                            </select>
-                        </label>
-                    </div>
-
-                    <div class="field-group">
-                        <label>
-                            <span>Budget range</span>
-                            <select name="budget">
-                                <option value="2000">¥2,000 or less</option>
-                                <option value="4000">¥4,000 or less</option>
-                                <option value="8000" selected>¥8,000 or less</option>
-                                <option value="12000">¥12,000 or less</option>
-                                <option value="16000">¥16,000 or less</option>
-                            </select>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="field-row">
-                    <div class="field-group">
-                        <label>
-                            <span>Storage capacity</span>
-                            <select name="storage">
-                                <option value="128">128GB</option>
-                                <option value="256" selected>256GB</option>
-                                <option value="512">512GB</option>
-                                <option value="1024">1TB</option>
-                            </select>
-                        </label>
-                    </div>
-
-                    <div class="field-group">
-                        <label>
-                            <span>Screen size</span>
-                            <select name="screen_size">
-                                <option value="6.0">Compact (6.0")</option>
-                                <option value="6.5" selected>Medium (6.5")</option>
-                                <option value="6.8">Large (6.8")</option>
-                                <option value="7.5">Tablet (7.5"+)</option>
-                            </select>
-                        </label>
-                    </div>
-                </div>
+            <div class="field-group">
+                <label>
+                    <span>Preferred brand</span>
+                    <select name="preferred_brand">
+                        <option value="any">Any</option>
+                        {% for brand in brands %}
+                        <option value="{{ brand }}">{{ brand }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <label>
+                    <span>Budget target</span>
+                    <select name="budget">
+                        <option value="2000">Level 1 · around ¥2,000</option>
+                        <option value="4000">Level 2 · around ¥4,000</option>
+                        <option value="8000" selected>Level 3 · around ¥8,000</option>
+                        <option value="12000">Level 4 · around ¥12,000</option>
+                        <option value="16000">Level 5 · around ¥16,000</option>
+                    </select>
+                </label>
             </div>
 
-            <!-- Step 2: Performance -->
-            <div class="req-step">
-                <div class="step-indicator">
-                    <span class="step-num">2</span>
-                    <span class="step-label">Performance</span>
-                </div>
-
-                <div class="field-row">
-                    <div class="field-group">
-                        <label>
-                            <span>Performance</span>
-                            <select name="performance">
-                                <option value="1">Level 1 - Basic</option>
-                                <option value="2">Level 2 - Good</option>
-                                <option value="3" selected>Level 3 - Strong</option>
-                                <option value="4">Level 4 - Flagship</option>
-                            </select>
-                        </label>
-                    </div>
-
-                    <div class="field-group">
-                        <label>
-                            <span>Battery life</span>
-                            <select name="battery">
-                                <option value="1">Level 1 - Light use</option>
-                                <option value="2">Level 2 - Moderate</option>
-                                <option value="3" selected>Level 3 - Long lasting</option>
-                                <option value="4">Level 4 - Ultra capacity</option>
-                            </select>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="field-row single">
-                    <div class="field-group">
-                        <label>
-                            <span>Charging speed</span>
-                            <select name="charging">
-                                <option value="1">Level 1 - Slow (0-30W)</option>
-                                <option value="2">Level 2 - Medium (31-60W)</option>
-                                <option value="3" selected>Level 3 - Fast (61-100W)</option>
-                                <option value="4">Level 4 - Ultra (100W+)</option>
-                            </select>
-                        </label>
-                    </div>
-                </div>
+            <div class="field-grid">
+                <label>
+                    <span>Performance</span>
+                    <select name="performance">
+                        <option value="1">Level 1</option>
+                        <option value="2">Level 2</option>
+                        <option value="3" selected>Level 3</option>
+                        <option value="4">Level 4</option>
+                    </select>
+                </label>
+                <label>
+                    <span>Charging</span>
+                    <select name="charging">
+                        <option value="1">Level 1 (0-30W)</option>
+                        <option value="2">Level 2 (31-60W)</option>
+                        <option value="3">Level 3 (61-100W)</option>
+                        <option value="4">Level 4 (100W+)</option>
+                    </select>
+                </label>
+                <label>
+                    <span>Screen size</span>
+                    <select name="screen_size">
+                        <option value="6.0">Compact (6.0")</option>
+                        <option value="6.5" selected>Medium (6.5")</option>
+                        <option value="6.8">Large (6.8")</option>
+                        <option value="7.5">Tablet (7.5"+)</option>
+                    </select>
+                </label>
+                <label>
+                    <span>Storage</span>
+                    <select name="storage">
+                        <option value="128">128GB</option>
+                        <option value="256" selected>256GB</option>
+                        <option value="512">512GB</option>
+                        <option value="1024">1TB</option>
+                    </select>
+                </label>
+                <label>
+                    <span>Battery</span>
+                    <select name="battery">
+                        <option value="1">Level 1 (3000-4000mAh)</option>
+                        <option value="2">Level 2 (4000-5000mAh)</option>
+                        <option value="3" selected>Level 3 (5000-5500mAh)</option>
+                        <option value="4">Level 4 (5500mAh+)</option>
+                    </select>
+                </label>
+                <label>
+                    <span>Camera</span>
+                    <select name="camera">
+                        <option value="1">Level 1 (Basic)</option>
+                        <option value="2">Level 2 (Good)</option>
+                        <option value="3" selected>Level 3 (Advanced)</option>
+                        <option value="4">Level 4 (Flagship)</option>
+                    </select>
+                </label>
             </div>
 
-            <!-- Step 3: Camera -->
-            <div class="req-step">
-                <div class="step-indicator">
-                    <span class="step-num">3</span>
-                    <span class="step-label">Camera</span>
-                </div>
-
-                <div class="field-row single">
-                    <div class="field-group">
-                        <label>
-                            <span>Camera quality</span>
-                            <select name="camera">
-                                <option value="1">Level 1 - Basic</option>
-                                <option value="2">Level 2 - Good</option>
-                                <option value="3" selected>Level 3 - Advanced</option>
-                                <option value="4">Level 4 - Flagship</option>
-                            </select>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="req-submit">
-                <button class="button primary" type="submit">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="11" cy="11" r="8"/>
-                        <path d="M21 21l-4.35-4.35"/>
-                    </svg>
-                    Generate Recommendation
-                </button>
-            </div>
+            <button class="button primary" type="submit">Generate Recommendation</button>
         </form>
 
-        <!-- Guide Panel -->
-        <aside class="req-guide reveal">
-            <div class="guide-card">
-                <h3>Level Guide</h3>
-                <p>Each level maps to real-world expectations:</p>
-
-                <div class="guide-items">
-                    <div class="guide-item">
-                        <span class="guide-level">L1</span>
-                        <div class="guide-info">
-                            <strong>Entry-level</strong>
-                            <span>Basic daily use</span>
-                        </div>
-                    </div>
-                    <div class="guide-item">
-                        <span class="guide-level">L2</span>
-                        <div class="guide-info">
-                            <strong>Mid-range</strong>
-                            <span>Good for most users</span>
-                        </div>
-                    </div>
-                    <div class="guide-item">
-                        <span class="guide-level">L3</span>
-                        <div class="guide-info">
-                            <strong>Upper mid</strong>
-                            <span>Strong performance</span>
-                        </div>
-                    </div>
-                    <div class="guide-item">
-                        <span class="guide-level">L4</span>
-                        <div class="guide-info">
-                            <strong>Flagship</strong>
-                            <span>Top-tier specs</span>
-                        </div>
-                    </div>
-                </div>
+        <aside class="info-panel">
+            <div>
+                <p class="eyebrow">Interpretation guide</p>
+                <h2>How the level system maps to device expectations.</h2>
             </div>
-
-            <div class="guide-card accent">
-                <div class="guide-tip">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"/>
-                        <path d="M12 16v-4m0-4h.01"/>
-                    </svg>
-                    <div>
-                        <strong>How it works</strong>
-                        <p>We use cosine similarity to match your preferences against our phone database.</p>
-                    </div>
+            <div class="table-lite">
+                <div class="table-row head">
+                    <span>Level</span>
+                    <span>Price</span>
+                    <span>Storage</span>
+                    <span>Camera</span>
                 </div>
+                {% for item in preset_ranges %}
+                <div class="table-row">
+                    <span>{{ item.label }}</span>
+                    <span>{{ item.price }}</span>
+                    <span>{{ item.storage }}</span>
+                    <span>{{ item.camera }}</span>
+                </div>
+                {% endfor %}
             </div>
         </aside>
-    </div>
+    </section>
 </main>
 {% endblock %}
