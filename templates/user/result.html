@@ -3,7 +3,7 @@
 {% block title %}Reasonable Or Not | Methodology{% endblock %}
 
 {% block content %}
-<main class="method-page">
+<main class="method-page" id="main-content">
     <section class="section-heading compact">
         <h1>How the project makes recommendation decisions.</h1>
         <p>This page helps explain the project in a portfolio context: not just what the UI does, but how the decision process is modeled using cosine similarity.</p>
@@ -25,6 +25,7 @@
         <article class="method-card">
             <h2>Value-oriented ranking</h2>
             <p>The table below shows how the same device dataset can also be presented from a value perspective, which is useful when explaining product thinking beyond pure similarity scoring.</p>
+            {% if phones %}
             <div class="table-lite stacked">
                 <div class="table-row head">
                     <span>Model</span>
@@ -41,6 +42,16 @@
                 </div>
                 {% endfor %}
             </div>
+            {% else %}
+            <div class="empty-state">
+                <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <path d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25m6-12V15a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 15V5.25m18 0A2.25 2.25 0 0 0 18.75 3H5.25A2.25 2.25 0 0 0 3 5.25m18 0V12a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 12V5.25"/>
+                </svg>
+                <h2>No phone data yet</h2>
+                <p>Import the phone database to see the value rankings.</p>
+                <a class="button primary" href="{% url 'requirement' %}">Try Recommendation</a>
+            </div>
+            {% endif %}
         </article>
     </section>
 </main>

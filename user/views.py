@@ -1,10 +1,10 @@
 import math
 
-from django.conf import settings
 from django.contrib.auth.hashers import check_password, make_password
 from django.shortcuts import redirect, render
 
 from .models import Phone, User
+from . import services
 
 
 def index(request):
@@ -37,7 +37,6 @@ def login(request):
             },
         )
 
-    hashed_password = make_password(password)
     user = User.objects.filter(username=username).first()
     if not user or not check_password(password, user.password):
         return render(
@@ -101,33 +100,7 @@ def recommend(request):
             },
         )
 
-    # Normalize features and compute cosine similarity
-    pref_vector = _build_preference_vector(preferences)
-    recommendations = []
-
-    for phone in phones:
-        phone_vector = _build_phone_vector(phone)
-        similarity = _cosine_similarity(pref_vector, phone_vector)
-        breakdown = _compute_breakdown(phone, preferences, pref_vector, phone_vector)
-
-        recommendations.append({
-            "id": phone.id,
-            "brand": phone.brand,
-            "model": phone.model,
-            "price": phone.price,
-            "cpu": phone.cpu,
-            "ram": phone.ram,
-            "rom": phone.rom,
-            "charging": phone.charging,
-            "battery": phone.battery,
-            "screen_size": phone.screen_size,
-            "front_camera": phone.front_camera,
-            "rear_camera": phone.rear_camera,
-            "match_score": round(similarity * 100, 1),
-            "breakdown": breakdown,
-        })
-
-    recommendations.sort(key=lambda x: x["match_score"], reverse=True)
+    recommendations = services.get_recommendations(phones, preferences)
 
     best_match = recommendations[0]
     alternatives = recommendations[1:4]
@@ -149,7 +122,9 @@ def result(request):
     phone_list = []
 
     for phone in phones:
-        # Value score: performance metrics per price unit
+        # Value score: weighted sum of key specs divided by price, ×1000 for readability.
+        # ROM counts 1/4 (storage is cheaper per GB), rear camera counts 1/2 (subjective quality),
+        # front camera counts full weight. Battery counts 1/200 (large absolute numbers).
         perf_score = (phone.ram + phone.rom // 4 + phone.battery // 200 +
                       phone.front_camera + phone.rear_camera // 2) / max(phone.price, 1) * 1000
         phone_list.append({
@@ -163,6 +138,7 @@ def result(request):
             "value_score": round(perf_score, 2),
         })
 
+    # TOP 20 highest value-score phones
     ranked_by_value = sorted(phone_list, key=lambda x: x["value_score"], reverse=True)[:20]
 
     return render(
@@ -219,6 +195,7 @@ def register(request):
 
 
 def _read_preferences(request):
+    """Parse preference form fields from the POST request."""
     return {
         "budget": int(request.POST.get("budget", 8000)),
         "performance": int(request.POST.get("performance", 4)),
@@ -229,58 +206,3 @@ def _read_preferences(request):
         "camera": int(request.POST.get("camera", 4)),
         "preferred_brand": request.POST.get("preferred_brand", "any"),
     }
-
-
-def _build_preference_vector(preferences):
-    """Build normalized preference vector for cosine similarity."""
-    # Map preferences to feature scale (1-4 normalized to 0-1)
-    return [
-        preferences["budget"] / 20000,           # budget: 0-20000
-        preferences["performance"] / 4,           # performance: 1-4
-        preferences["charging"] / 150,            # charging: 0-150W
-        preferences["screen_size"] / 10,         # screen size: 0-10 inch
-        preferences["storage"] / 1024,            # storage: 0-1024GB (using level as proxy)
-        preferences["battery"] / 7000,            # battery: 0-7000mAh
-        preferences["camera"] / 4,               # camera level: 1-4
-    ]
-
-
-def _build_phone_vector(phone):
-    """Build normalized phone feature vector for cosine similarity."""
-    return [
-        phone.price / 20000,
-        phone.ram / 24,                         # max ~24GB RAM in dataset
-        phone.charging / 240,                    # max ~240W charging
-        phone.screen_size / 10,
-        phone.rom / 1024,                        # storage in GB
-        phone.battery / 7000,
-        phone.rear_camera / 20000,               # max ~200MP in dataset
-    ]
-
-
-def _cosine_similarity(vec1, vec2):
-    """Calculate cosine similarity between two vectors."""
-    dot_product = sum(a * b for a, b in zip(vec1, vec2))
-    magnitude1 = math.sqrt(sum(a * a for a in vec1))
-    magnitude2 = math.sqrt(sum(b * b for b in vec2))
-
-    if magnitude1 == 0 or magnitude2 == 0:
-        return 0.0
-
-    return dot_product / (magnitude1 * magnitude2)
-
-
-def _compute_breakdown(phone, preferences, pref_vec, phone_vec):
-    """Compute contribution of each feature to the similarity score."""
-    labels = ["Budget", "Performance", "Charging", "Screen Size", "Storage", "Battery", "Camera"]
-    breakdown = []
-
-    for i, (label, p_val, ph_val) in enumerate(zip(labels, pref_vec, phone_vec)):
-        if p_val > 0:
-            contribution = (p_val * ph_val) / max(sum(pref_vec), 0.001)
-            breakdown.append({
-                "label": label,
-                "score": round(contribution * 100, 1),
-            })
-
-    return sorted(breakdown, key=lambda x: x["score"], reverse=True)

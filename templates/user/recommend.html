@@ -3,7 +3,7 @@
 {% block title %}Reasonable Or Not | Recommendation{% endblock %}
 
 {% block content %}
-<main class="recommend-page">
+<main class="recommend-page" id="main-content">
     <section class="section-heading compact">
         <p class="eyebrow">Recommendation result</p>
         <h1>{{ best_match.brand }} {{ best_match.model }} is the strongest match.</h1>
@@ -39,11 +39,16 @@
 
         <aside class="explain-card">
             <h2>Why it ranked first</h2>
-            <div class="mini-list">
+            <div class="reasons-grid">
                 {% for item in best_match.breakdown|slice:":5" %}
-                <div class="mini-row">
-                    <span>{{ item.label }}</span>
-                    <strong>{{ item.score }}</strong>
+                <div class="reason-card">
+                    <div class="reason-header">
+                        <span class="reason-label">{{ item.label }}</span>
+                        <span class="reason-score">{{ item.score }}%</span>
+                    </div>
+                    <div class="reason-bar-bg" role="progressbar" aria-valuenow="{{ item.score }}" aria-valuemin="0" aria-valuemax="100" aria-label="{{ item.label }} contribution">
+                        <div class="reason-bar-fill" style="width: {{ item.score }}%"></div>
+                    </div>
                 </div>
                 {% endfor %}
             </div>

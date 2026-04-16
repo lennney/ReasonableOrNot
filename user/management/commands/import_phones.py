@@ -31,56 +31,56 @@ class Command(BaseCommand):
 
                 try:
                     price = int(row[2].replace(',', '').replace('无', '0')) if row[2] else 0
-                except:
+                except (ValueError, TypeError, AttributeError):
                     price = 0
 
                 cpu = row[3].strip()
 
                 try:
                     ram = int(float(row[4])) if row[4] else 0
-                except:
+                except (ValueError, TypeError):
                     ram = 0
 
                 try:
                     rom = int(float(row[5])) if row[5] else 0
-                except:
+                except (ValueError, TypeError):
                     rom = 0
 
                 try:
                     charging = int(float(row[6].replace('无', '0'))) if row[6] else 0
-                except:
+                except (ValueError, TypeError, AttributeError):
                     charging = 0
 
                 try:
                     battery = int(float(row[7])) if row[7] else 0
-                except:
+                except (ValueError, TypeError):
                     battery = 0
 
                 try:
                     screen_refresh = int(float(row[8])) if row[8] else 60
-                except:
+                except (ValueError, TypeError):
                     screen_refresh = 60
 
                 screen_res = row[9].strip()
 
                 try:
                     weight = int(float(row[10].replace('无', '0'))) if row[10] else 0
-                except:
+                except (ValueError, TypeError, AttributeError):
                     weight = 0
 
                 try:
                     front_cam = int(float(row[11].replace('暂无数据', '0'))) if row[11] else 0
-                except:
+                except (ValueError, TypeError, AttributeError):
                     front_cam = 0
 
                 try:
                     rear_cam = int(float(row[12].replace('暂无数据', '0'))) if row[12] else 0
-                except:
+                except (ValueError, TypeError, AttributeError):
                     rear_cam = 0
 
                 try:
                     screen_size = float(row[13]) if row[13] else 0.0
-                except:
+                except (ValueError, TypeError):
                     screen_size = 0.0
 
                 if model in existing_models:
