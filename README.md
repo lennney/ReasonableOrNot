@@ -12,9 +12,9 @@ A Django-based phone recommendation engine that matches user preferences against
 
 ## Project Overview / 项目概述
 
-**Reasonable Or Not** transforms a classroom recommender concept into a polished web application. Users fill out a preference form (budget, performance, charging speed, screen size, storage, battery, camera), and the system returns the best-matched phone with a similarity score and alternatives.
+**Reasonable Or Not** transforms a recommender concept into a polished web application. Users fill out a preference form (budget, performance, charging speed, screen size, storage, battery, camera), and the system returns the best-matched phone with a similarity score and alternatives.
 
-**Reasonable Or Not** 将课堂作业中的推荐概念打造为完整的 Web 应用。用户填写偏好表单（预算、性能、充电速度、屏幕大小、存储、电池、相机），系统返回最佳匹配机型、相似度评分及备选方案。
+**Reasonable Or Not** 将推荐概念打造为完整的 Web 应用。用户填写偏好表单（预算、性能、充电速度、屏幕大小、存储、电池、相机），系统返回最佳匹配机型、相似度评分及备选方案。
 
 ---
 
